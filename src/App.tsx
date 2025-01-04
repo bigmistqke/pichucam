@@ -17,6 +17,7 @@ import { GLTF, GLTFLoader, OrbitControls } from 'three-stdlib'
 import avatar from './assets/avatar.glb?url'
 import { Button } from './components'
 import material from './extensions/material'
+import transform from './extensions/transform'
 import webcam from './extensions/webcam'
 import styles from './meow.module.css'
 import type { Extension, MeowState } from './types'
@@ -58,7 +59,7 @@ function createThreeManager() {
     const _gltf = gltf()
     if (_gltf) {
       scene.add(_gltf.scene)
-      scene.rotateY(Math.PI)
+      // scene.rotateY(Math.PI)
       traverse(_gltf.scene, object => {
         if (object instanceof THREE.Mesh) {
           object.material.depthWrite = true
@@ -253,7 +254,11 @@ const App: Component = () => {
 
   const [enabled, setEnabled] = createSignal(true)
   const [videoLoaded, setVideoLoaded] = createSignal(false)
-  const [extensions, setExtensions] = createStore<Array<Extension>>([material(), webcam()])
+  const [extensions, setExtensions] = createStore<Array<Extension>>([
+    transform(),
+    material(),
+    webcam(),
+  ])
 
   const [faceLandmarker] = createResource(async function createFaceLandmarker() {
     const filesetResolver = await FilesetResolver.forVisionTasks(
